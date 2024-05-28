@@ -1,0 +1,15 @@
+Script started on 2024-05-28 00:24:16+00:00 [TERM="xterm" TTY="/dev/pts/0" COLUMNS="120" LINES="30"]                    
+# pwd                                                                                                                   
+/root                                                                                                                   
+# cd ..                                                                                                                
+ # ls                                                                                                                    
+ bin   dev  home  lib64  mnt           
+ myScript2.sh  proc  run   srv  tmp         usr                                    
+ boot  etc  lib   media  myScript.txt  opt           
+ root  sbin  sys  typescript  var                                    
+ # cd ./usr/src/app                                                                                                      
+ # ls                                                                                                                    
+ index.js                                                                                                                
+ # nano index.js                                                                                                         
+ # nano index.js                                                                                                         
+ # exit 

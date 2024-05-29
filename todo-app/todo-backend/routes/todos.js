@@ -21,10 +21,19 @@ const singleRouter = express.Router();
 
 const findByIdMiddleware = async (req, res, next) => {
   const { id } = req.params
-  req.todo = await Todo.findById(id)
-  if (!req.todo) return res.sendStatus(404)
-
-  next()
+  // need to implement middleware to handle known error , eg. CastError
+  // use try catch in this block for now
+  try {
+    req.todo = await Todo.findById(id)
+    if (!req.todo) { 
+      console.log('!req.todo')
+      return res.sendStatus(404)
+    }
+    next()
+  } catch(error) {
+    console.log('error name', error)
+    return res.status(404).send('the note id is malformated')
+  }
 }
 
 /* DELETE todo. */
@@ -34,13 +43,36 @@ singleRouter.delete('/', async (req, res) => {
 });
 
 /* GET todo. */
-singleRouter.get('/', async (req, res) => {
-  res.sendStatus(405); // Implement this
+singleRouter.get('/', async (req, res, next) => {
+  try {
+    const foundNote = await req.todo
+    return res.json(foundNote)
+  } catch(error) {
+    res.sendStatus(404); // Implement this
+    next(error)
+  }
 });
 
 /* PUT todo. */
-singleRouter.put('/', async (req, res) => {
-  res.sendStatus(405); // Implement this
+singleRouter.put('/', async (req, res, next) => {
+  const { text, done } = req.body;
+  try {
+    const foundNote = await req.todo
+    if (text) {
+      foundNote.text = text
+    }
+    if (done) {
+      foundNote.done = done
+    }
+    if (text || done) {
+      await foundNote.save()
+    }
+    return res.status(200).json(foundNote)
+  } catch (error) {
+    res.sendStatus(404); // Implement this
+    next(error)
+  }
+
 });
 
 router.use('/:id', findByIdMiddleware, singleRouter)

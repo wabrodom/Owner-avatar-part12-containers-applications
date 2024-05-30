@@ -1,6 +1,7 @@
 const express = require('express');
 const { Todo } = require('../mongo')
 const router = express.Router();
+const { postStatisticPlus1 } = require('../util/counter')
 
 /* GET todos listing. */
 router.get('/', async (_, res) => {
@@ -9,12 +10,20 @@ router.get('/', async (_, res) => {
 });
 
 /* POST todo to listing. */
+/* when request to post route add count */
 router.post('/', async (req, res) => {
-  const todo = await Todo.create({
-    text: req.body.text,
-    done: false
-  })
-  res.send(todo);
+
+  await postStatisticPlus1()
+  try {
+    const todo = await Todo.create({
+      text: req.body.text,
+      done: false
+    })
+
+    res.send(todo);
+  } catch (error) {
+
+  }
 });
 
 const singleRouter = express.Router();

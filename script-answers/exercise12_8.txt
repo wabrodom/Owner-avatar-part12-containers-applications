@@ -1,0 +1,111 @@
+user@MP1ZD3R2:/mnt/c/...$ script myScript5Script started, output log file is 'myScript5'.
+user@MP1ZD3R2:/mnt/c/...$ ls
+myScript.txt   myScript3.txt  myScript5       todo-app
+myScript2.txt  myScript4      script-answers  typescript
+user@MP1ZD3R2:/mnt/c/...$ cd ./todo-app/to
+do-backend/
+user@MP1ZD3R2:/mnt/c/.../todo-app/todo-backend$ ls
+Dockerfile  app.js  docker-compose.dev.yml  mongo       node_modules       package.json  routes     
+README.md   bin     docker-compose.yml      mongo_data  package-lock.json  redis         util       
+user@MP1ZD3R2:/mnt/c/.../todo-app/todo-backend$ docker compose -f docker-compose.dev.yml down --volumes
+WARN[0000] /mnt/c/.../todo-app/todo-backend/docker-compose.dev.yml: `version` is obsolete
+[+] Running 2/2
+ ✔ Container todo-backend-mongo-1  Removed                                                     0.0s 
+ ✔ Network todo-backend_default    Removed                                                     0.3s 
+user@MP1ZD3R2:/mnt/c/.../todo-app/todo-backend$ docker compose -f docker-compose.dev.yml up -d
+WARN[0000] /mnt/c/.../todo-app/todo-backend/docker-compose.dev.yml: `version` is obsolete
+[+] Running 2/2
+ ✔ Network todo-backend_default    Created                                                     0.0s 
+ ✔ Container todo-backend-mongo-1  Started                                                     0.6s 
+user@MP1ZD3R2:/mnt/c/.../todo-app/todo-backend$ docker ps
+CONTAINER ID   IMAGE     COMMAND                  CREATED          STATUS          PORTS
+         NAMES
+5d85e3088375   mongo     "docker-entrypoint.s…"   12 seconds ago   Up 10 seconds   0.0.0.0:3456->27017/tcp   todo-backend-mongo-1
+user@MP1ZD3R2:/mnt/c/.../todo-app/todo-backend$ docker exec -it todo-backend-mongo-1 bash
+root@5d85e3088375:/# mongosh -u root -p example
+Current Mongosh Log ID: 6657f7c597afe37e462202d7
+Connecting to:          mongodb://<credentials>@127.0.0.1:27017/?directConnection=true&serverSelectionTimeoutMS=2000&appName=mongosh+2.2.5
+Using MongoDB:          7.0.9
+Using Mongosh:          2.2.5
+
+For mongosh info see: https://docs.mongodb.com/mongodb-shell/
+
+------
+   The server generated these startup warnings when booting
+   2024-05-30T03:51:05.812+00:00: /sys/kernel/mm/transparent_hugepage/enabled is 'always'. We suggest setting it to 'never' in this binary version
+   2024-05-30T03:51:05.812+00:00: vm.max_map_count is too low
+------
+
+test> show dbs
+admin         100.00 KiB
+config         72.00 KiB
+local          72.00 KiB
+the_database   72.00 KiB
+test> use the_database
+switched to db the_database
+the_database> show collections
+todos
+the_database> db.todos.find({})
+[
+  {
+    _id: ObjectId('6656fc3137ee7f34532202d8'),
+    text: 'Write code',
+    done: true
+  },
+  {
+    _id: ObjectId('6656fc3137ee7f34532202d9'),
+    text: 'love yourself',
+    done: true
+  },
+  {
+    _id: ObjectId('6657ecb5fc2f3037142202d9'),
+    text: 'may 2024',
+    done: false
+  }
+]
+the_database> db.todos.insertOne({ text:"Increase the number of tools in my toolbelt", done: false })
+{
+  acknowledged: true,
+  insertedId: ObjectId('6657f7f397afe37e462202d8')
+}
+the_database> db.todos.find({})
+[
+  {
+    _id: ObjectId('6656fc3137ee7f34532202d8'),
+    text: 'Write code',
+    done: true
+  },
+  {
+    _id: ObjectId('6656fc3137ee7f34532202d9'),
+    text: 'love yourself',
+    done: true
+  },
+  {
+    _id: ObjectId('6657ecb5fc2f3037142202d9'),
+    text: 'may 2024',
+    done: false
+  },
+  {
+    _id: ObjectId('6657f7f397afe37e462202d8'),
+    text: 'Increase the number of tools in my toolbelt',
+    done: false
+  }
+]
+the_database>
+root@5d85e3088375:/# 
+exit
+
+What's next?
+  Try Docker Debug for seamless, persistent debugging tools in any container or image → docker debug todo-backend-mongo-1
+  Learn more at https://docs.docker.com/go/debug-cli/
+user@MP1ZD3R2:/mnt/c/.../todo-app/todo-backend$
+exit
+Script done.
+user@MP1ZD3R2:/mnt/c/...$ ls
+myScript.txt   myScript3.txt  myScript5       todo-app
+myScript2.txt  myScript4      script-answers  typescript
+user@MP1ZD3R2:/mnt/c/...$ cp myScript5 > ./script-answers/exercise12_8.txt
+cp: missing destination file operand after 'myScript5'
+Try 'cp --help' for more information.
+user@MP1ZD3R2:/mnt/c/...$ cp myScript5 ./script-answers/exercise12_8.txt
+user@MP1ZD3R2:/mnt/c/...$ 

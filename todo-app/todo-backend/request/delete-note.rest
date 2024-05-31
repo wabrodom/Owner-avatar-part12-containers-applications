@@ -1,0 +1,7 @@
+###
+GET http://localhost:3000/todos
+
+@deleteId = 66593ba22795d6519c07cf21
+
+###
+DELETE http://localhost:3000/todos/{{deleteId}}

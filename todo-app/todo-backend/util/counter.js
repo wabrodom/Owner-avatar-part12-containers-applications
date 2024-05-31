@@ -10,7 +10,9 @@ const counterPlusOne = async (keyName) => {
 }
 
 const currentCount = async (keyName) => {
-  return await getAsync(keyName) || 0;
+  const storedCount = await getAsync(keyName) || 0;
+  // console.log('set as number but typeof storedCount is', typeof storedCount, storedCount)
+  return storedCount
 }
 
 

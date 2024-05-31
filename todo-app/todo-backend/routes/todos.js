@@ -1,7 +1,7 @@
 const express = require('express');
 const { Todo } = require('../mongo')
 const router = express.Router();
-const { postStatisticPlus1 } = require('../util/counter')
+const { postStatisticPlus1, successPostPlus1 } = require('../util/counter')
 
 /* GET todos listing. */
 router.get('/', async (_, res) => {
@@ -19,7 +19,7 @@ router.post('/', async (req, res) => {
       text: req.body.text,
       done: false
     })
-
+    await successPostPlus1()
     res.send(todo);
   } catch (error) {
 

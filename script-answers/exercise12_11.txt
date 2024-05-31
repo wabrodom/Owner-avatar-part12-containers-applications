@@ -1,0 +1,50 @@
+Script started, output log file is 'myScript.txt'.
+user@MP1ZD3R2:todo-back/docker-compose.dev.yml: `versend$ docker compose -f docker-compose.dev.yml up -d
+WARN[0000] todo-backend/docker-compose.dev.yml: `version` is obsolete
+[+] Running 3/3
+ ✔ Network todo-backend_default    Created                                                      0.1s 
+ ✔ Container todo-backend-redis-1  Started                                                      1.5s end$ docker ps
+ ✔ Container todo-backend-mongo-1  Started                                                      1.5s         NAMES
+user@MP1ZD3R2:todo-back/tcp    todo-backend-redis-1  end$ docker ps                                                                                       end$ docker exec todo-backend-
+CONTAINER ID   IMAGE     COMMAND                  CREATED          STATUS          PORTS
+        NAMES
+d6bf6886906b   redis     "docker-entrypoint.s…"   16 seconds ago   Up 14 seconds   0.0.0.0:6379->6379/tcp    todo-backend-redis-1
+user@MP1ZD3R2:~$ docker exec -it todo-backend-redis-1 bash
+root@d6bf6886906b:/data# redis-cli
+127.0.0.1:6379> KEYS *
+(empty array)
+127.0.0.1:6379> KEYS *
+1) "successPost"
+2) "postStatistic"
+3) "visitCount"
+127.0.0.1:6379> GET successPost
+"1"
+127.0.0.1:6379> SET successPost 9001
+OK
+127.0.0.1:6379> GET successPost
+"9001"
+127.0.0.1:6379> GET successPost
+"9002"
+127.0.0.1:6379> DEL sucessPost
+(integer) 0
+127.0.0.1:6379> KEYS *
+1) "successPost"
+2) "postStatistic"
+3) "visitCount"
+127.0.0.1:6379> DEL successPost
+(integer) 1
+127.0.0.1:6379> GET successPost
+(nil)
+127.0.0.1:6379> GET successPost
+"1"
+127.0.0.1:6379>
+root@d6bf6886906b:/data# 
+exit
+
+What's next?
+  Try Docker Debug for seamless, persistent debugging tools in any container or image → docker debug 
+todo-backend-redis-1
+  Learn more at https://docs.docker.com/go/debug-cli/
+user@MP1ZD3R2:~$
+exit
+Script done.

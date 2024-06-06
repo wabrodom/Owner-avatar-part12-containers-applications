@@ -4,7 +4,7 @@ WORKDIR /usr/src/app
 
 COPY . .
 
-ENV VITE_BACKEND_URL=http://localhost:8888/api/
+# ENV VITE_BACKEND_URL=http://localhost:8888/api/
 # localhost mean current computer, now it a container. 
 #  but in this context, just hardcode backend url before build
 

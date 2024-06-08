@@ -2,3 +2,8 @@
 .gitignore
 node_modules
 Dockerfile
+dist
+logs
+temp
+.DS_Store
+.git

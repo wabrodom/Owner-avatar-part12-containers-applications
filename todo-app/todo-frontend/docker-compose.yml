@@ -7,18 +7,20 @@ services:
     volumes:
       - ./:/usr/src/app
     ports:
-      - 5173:5173
+      - 8989:80
     container_name: todo-front-production
 
-  nginx:
-    image: nginx:1.20.1
-    volumes:
-      - ./nginx.dev.conf:/etc/nginx/nginx.conf:ro
-    ports:
-      - 8080:80
-    container_name: reverse-proxy-onfront
-    depends_on:
-      - app # wait for the frontend container to be started
+#  can make app image that include  nginx that COPY config
+
+  # nginx:
+  #   image: nginx:1.20.1
+  #   volumes:
+  #     - ./nginx.dev.conf:/etc/nginx/nginx.conf:ro
+  #   ports:
+  #     - 8080:80
+  #   container_name: reverse-proxy-onfront
+  #   depends_on:
+  #     - app # wait for the frontend container to be started
 
 #  unable to find user node: no matching entries in passwd file
 # debug-helper:

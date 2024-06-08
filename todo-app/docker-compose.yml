@@ -5,21 +5,23 @@ services:
       context: ./todo-frontend
       dockerfile: Dockerfile
     env_file:
-      - ./todo-frontend/.env
-    volumes:
-      - ./todo-frontend/:/usr/src/app
+      - ./todo-frontend/.env.frontend
+    # environment:
+    #   -VITE_BACKEND_URL=
+    expose:
+      - "80"
     container_name: todo-front-product
-
+  
   mongo:
     image: mongo
     ports:
       - 5456:27017
-    # env_file:
-    #   - ./todo-backend/.env
-    environment:
-      MONGO_INITDB_ROOT_USERNAME: root
-      MONGO_INITDB_ROOT_PASSWORD: example
-      MONGO_INITDB_DATABASE: the_database
+    env_file:
+      - ./todo-backend/.env
+    # environment:
+    #   MONGO_INITDB_ROOT_USERNAME: 
+    #   MONGO_INITDB_ROOT_PASSWORD: 
+    #   MONGO_INITDB_DATABASE: 
     volumes:
       - ./todo-backend/mongo/mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js
       - ./todo-backend/mongo_data:/data/db
@@ -28,44 +30,44 @@ services:
     image: redis
     ports:
       - 6379:6379 
-    # env_file:
-    #   - ./todo-backend/.env
-    environment:
-      - REDIS_URL
-    volumes: # Declare the volume
+    env_file:
+      - ./todo-backend/.env
+    # environment:
+    #   - REDIS_URL
+    volumes:
       - ./todo-backend/redis_data:/data
     command: ['redis-server', '--appendonly', 'yes'] # Overwrite the CMD
 
-  server:                          # the name of service
+  server:
     image: todo-backend-production
     build: 
       context: ./todo-backend/
       dockerfile: Dockerfile
     volumes:
       - ./todo-backend/:/usr/src/app
-    # ports:
-    #   - 3939:3939
-    # whatever port nginx doesn't care, but it better to let others know port 3000 is server port
+    expose:
+      - "3000"
     container_name: todo-backend-production
-    # env_file:
-    #   - ./todo-backend/.env
-    environment:
-      - REDIS_URL=redis://redis:6379
-      - MONGO_URL=mongodb://the_username:the_password@mongo:27017/the_database
+    env_file:
+      - ./todo-backend/.env
+    # environment:
+    #   - REDIS_URL=
+    #   - MONGO_URL=
     depends_on:
       - mongo
       - redis
 
 
   nginx:
-    image: nginx:1.20.1
+    image: nginx:1.27-alpine
     volumes:
-      - ./nginx.dev.conf:/etc/nginx/nginx.conf:ro
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
     ports:
       - 8888:80
     container_name: todo-reverse-proxy
     depends_on:
       - app
       - server
+
 # debug-helper:
 #   image: busybox

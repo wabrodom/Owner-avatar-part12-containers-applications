@@ -1,0 +1,15 @@
+POST http://localhost:4000/grapql
+Content-Type: application/json
+
+{
+  "query": "query allAuthors {allAuthors {name born}}"
+}
+
+###
+POST http://localhost:4000/grapql
+Content-Type: application/json
+
+{
+  "query": "query allBooks{allBooks {title author {name born}}}"
+}
+

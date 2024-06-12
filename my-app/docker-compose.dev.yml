@@ -1,0 +1,42 @@
+services:
+  app:
+    image: my-app-front-dev
+    build:
+      context: ./frontend
+      dockerfile: dev.Dockerfile
+    env_file:
+      - ./frontend/.env
+    volumes:
+      - ./frontend/:/usr/src/app
+    container_name: my-app-front-dev  
+    # ports:
+    #   - 3789:3790
+    # nginx.conf need to know application port, 
+    # the port above doesn't matter in nginx reverse proxy
+    
+  server:                          # the name of service
+    image: my-app-backend-dev
+    build: 
+      context: ./backend/
+      dockerfile: dev.Dockerfile
+    env_file:
+      - ./backend/.env
+    volumes:
+      - ./backend/:/usr/src/app
+    # ports:
+    #   - 3939:3939
+    # whatever port nginx doesn't care, but it better to let others know port 3000 is server port
+    container_name: my-app-backend-dev
+
+  nginx:
+    image: nginx:1.20.1
+    volumes:
+      - ./nginx.dev.conf:/etc/nginx/nginx.conf:ro
+    ports:
+      - 8888:80
+    container_name: my-app-reverse-proxy
+    depends_on:
+      - app
+      - server
+# debug-helper:
+#   image: busybox

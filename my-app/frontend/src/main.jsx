@@ -30,7 +30,7 @@ const authLink = setContext((request, previousContext) => {
 
 const httpLink = createHttpLink({ uri: import.meta.env.VITE_BACKEND_URL })
 
-const wsLink = new GraphQLWsLink(createClient({ url: 'ws://localhost:4000' }))
+const wsLink = new GraphQLWsLink(createClient({ url: import.meta.env.VITE_GRAPHQLWSLINK }))
 
 const splitLink = split(
   ({ query }) => {

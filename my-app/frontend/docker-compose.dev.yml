@@ -1,0 +1,27 @@
+services:
+  app:
+    image: my-app-front-dev
+    build:
+      context: .
+      dockerfile: dev.Dockerfile
+    environment:
+      - VITE_BACKEND_URL=http://localhost:3939
+      - VITE_GRAPHQLWSLINK=ws://localhost:3939
+    volumes:
+      - ./:/usr/src/app
+    ports:
+      - 5199:5173
+    container_name: my-app-front-dev-onfront
+
+  nginx:
+    image: nginx:1.20.1
+    volumes:
+      - ./nginx.dev.conf:/etc/nginx/nginx.conf:ro
+    ports:
+      - 8080:80
+    container_name: reverse-proxy-onfront
+    depends_on:
+      - app # wait for the frontend container to be started
+
+# debug-helper:
+#   image: busybox

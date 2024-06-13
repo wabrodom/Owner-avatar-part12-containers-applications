@@ -1,7 +1,8 @@
 const { GraphQLError } = require('graphql')
 // const { gql } = require('apollo/server')
 const jwt =require('jsonwebtoken')
-const bcrypt = require('bcrypt')
+const { bcrypt, bcryptVerify } = require('hash-wasm')
+const crypto = require('crypto')
 
 const User = require('../models/User')
 const config = require('../utils/config')
@@ -69,8 +70,17 @@ const resolvers = {
   Mutation: {
     createUser: async (root, args) => {
       const password = args.password
-      const saltRounds = 10
-      const passwordHash = await bcrypt.hash(password, saltRounds)
+
+      const salt = crypto.randomBytes(16);
+
+      const passwordHash = await bcrypt({
+        password: password,
+        salt, // salt is a buffer containing 16 random bytes
+        costFactor: 11,
+        outputType: 'encoded', // return standard encoded string containing parameters needed to verify the key
+      });
+
+      // const passwordHash = await bcrypt.hash(password, saltRounds)
 
       const user = new User({ 
         username: args.username,
@@ -103,7 +113,11 @@ const resolvers = {
         })
       }
 
-      const passwordCorrect = await bcrypt.compare(args.password, user.passwordHash)
+      const passwordCorrect = await bcryptVerify({
+        password: args.password,
+        hash: user.passwordHash
+      })
+      
       if (!passwordCorrect) {
         throw new GraphQLError('wrong credentials' , {
           extensions: {

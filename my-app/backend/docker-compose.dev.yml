@@ -9,6 +9,7 @@ services:
       - .env
     volumes:
       - ./:/usr/src/app
+      - /usr/src/app/node_modules
     ports: 
       - 3939:4000
     container_name: my-app-backend-dev

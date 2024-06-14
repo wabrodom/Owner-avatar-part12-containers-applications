@@ -4,17 +4,19 @@ services:
     build:
       context: ./frontend
       dockerfile: dev.Dockerfile
-    env_file:
-      - ./frontend/.env
+    environment:
+      - VITE_BACKEND_URL=http://localhost:8888/api/
+      - VITE_GRAPHQLWSLINK=ws://localhost:8888/api/
     volumes:
       - ./frontend/:/usr/src/app
-    container_name: my-app-front-dev  
-    # ports:
-    #   - 3789:3790
-    # nginx.conf need to know application port, 
-    # the port above doesn't matter in nginx reverse proxy
+      - /usr/src/app/node_modules
+    container_name: my-app-front-dev
+    depends_on:
+      - server
+    networks:
+      - app-server
     
-  server:                          # the name of service
+  server:
     image: my-app-backend-dev
     build: 
       context: ./backend/
@@ -23,13 +25,14 @@ services:
       - ./backend/.env
     volumes:
       - ./backend/:/usr/src/app
-    # ports:
-    #   - 3939:3939
+      - /usr/src/app/node_modules
     # whatever port nginx doesn't care, but it better to let others know port 3000 is server port
     container_name: my-app-backend-dev
+    networks:
+    - app-server
 
   nginx:
-    image: nginx:1.20.1
+    image: nginx:1.27
     volumes:
       - ./nginx.dev.conf:/etc/nginx/nginx.conf:ro
     ports:
@@ -38,5 +41,12 @@ services:
     depends_on:
       - app
       - server
+    networks:
+    - app-server
+
+# why https://docs.docker.com/network/drivers/bridge/
+networks:
+  app-server:
+    driver: bridge
 # debug-helper:
 #   image: busybox
